@@ -25,9 +25,9 @@ if not re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", sys.argv[1]
 # Change MAC address format if needed
 if "-" in sys.argv[1] or ":" in sys.argv[1]:
     mac_address = sys.argv[1].replace(":", "")
-    mac_address = mac_address.replace("-", "")
+    mac_address = mac_address.replace("-", "").upper()
 else:
-    mac_address = sys.argv[1]
+    mac_address = sys.argv[1].upper()
 
 # Compare entered MAC address with addresses in "MAC_INFO"
 for address in MAC_ADDRESS:
