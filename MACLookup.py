@@ -5,11 +5,11 @@ import re
 
 
 def usage():
-    print(f"Usage: {sys.argv[0]} [MAC ADDRESS]")
-    print("\nExample:"
-          f"\n\t-{sys.argv[0]} FC:FB:FB:01:FA:21"
-          f"\n\t-{sys.argv[0]} FC-FB-FB-01-FA-21"
-          f"\n\t-{sys.argv[0]} FCFBFB01FA21")
+    print("Usage: MACLookup [MAC ADDRESS]")
+    print("\nAccepted formats:"
+          "\n\t- MACLookup FC:FB:FB:01:FA:21"
+          "\n\t- MACLookup FC-FB-FB-01-FA-21"
+          "\n\t- MACLookup FCFBFB01FA21")
     sys.exit(1)
 
 
