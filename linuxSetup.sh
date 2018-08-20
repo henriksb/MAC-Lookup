@@ -5,6 +5,6 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-mv MACLookup.py /usr/local/bin/MAC-Lookup
-chmod +x /usr/local/bin/MAC-Lookup
+mv MAC-Lookup.py /usr/local/bin/MACLookup
+chmod +x /usr/local/bin/MACLookup
 echo "[+] Setup was successful. The script can now be run from anywhere by typing 'MACLookup'"
