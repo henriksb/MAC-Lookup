@@ -1,13 +1,18 @@
 #!/usr/bin/python3
 from bs4 import BeautifulSoup
 import requests
+import platform
 import sys
 import re
 import os
 
 MAC_URL = "http://standards-oui.ieee.org/oui.txt"
 # MAC_URL_WIRESHARK = "https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf"
-MAC_ADDRESS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/MAC_ADDRESS.txt" 
+
+if platform.system() == "Windows":
+    MAC_ADDRESS_PATH = os.path.dirname(os.path.realpath(__file__)) + "\MAC_ADDRESS.txt" 
+else:
+    MAC_ADDRESS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/MAC_ADDRESS.txt" 
 
 
 def usage():
