@@ -7,17 +7,10 @@ import re
 import os
 
 MAC_URL = "http://standards-oui.ieee.org/oui.txt"
-# MAC_URL_WIRESHARK = "https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf"
-
-if platform.system() == "Windows":
-    MAC_ADDRESS_PATH = os.path.dirname(os.path.realpath(__file__)) + "\MAC_ADDRESS.txt" 
-else:
-    MAC_ADDRESS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/MAC_ADDRESS.txt" 
 
 
 def usage():
-    print("Usage: MACLookup [MAC ADDRESS]"
-          "\n       MACLookup update")
+    print("Usage: MACLookup [MAC ADDRESS]")
     print("\nAccepted formats:"
           "\n\t- MACLookup FC:FB:FB:01:FA:21"
           "\n\t- MACLookup FC-FB-FB-01-FA-21"
@@ -37,23 +30,14 @@ def download():
         for line in soup.split("\n"):
             if "(base 16)" in line:
                 MAC_ADDRESS.write(line.replace("(base 16)", ""))
-
-
-# Check if enough arguments are provided
-if len(sys.argv) == 1:
-    usage()
-
-if sys.argv[1].lower() == "update":
-    print("[*] Updating..")
-    download()
-    print("[+] Finished updating")
-    sys.exit(0)
-
-# Validate entered MAC address
-if not re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", sys.argv[1].lower()):
-    print("[!] Invalid MAC address\n")
-    usage()
-
+                
+                
+if platform.system() == "Windows":
+    MAC_ADDRESS_PATH = os.path.dirname(os.path.realpath(__file__)) + "\MAC_ADDRESS.txt" 
+else:
+    MAC_ADDRESS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/MAC_ADDRESS.txt" 
+    
+# Check if we have the MAC address list, if not, ask if user wants to download it
 if not os.path.exists(MAC_ADDRESS_PATH):
     y_n = input("[?] MAC_ADDRESS.txt not found, do you want to download it? [y/n]: ")
     if y_n[0].lower() == "y":
@@ -61,19 +45,24 @@ if not os.path.exists(MAC_ADDRESS_PATH):
     else:
         sys.exit(1)
 
-MAC_ADDRESS = open(MAC_ADDRESS_PATH, "r", encoding="utf8").read()
-
-# Change MAC address format if needed
-if "-" in sys.argv[1] or ":" in sys.argv[1]:
-    mac_address = sys.argv[1].replace(":", "").upper()
-    mac_address = mac_address.replace("-", "").upper()
+# Check if enough arguments are provided, else, verify input
+if len(sys.argv) == 1:
+    usage()
 else:
-    mac_address = sys.argv[1].upper()
+    # Make format equal to our datas format so that we can process it properly
+    mac_address = sys.argv[1].replace(":", "").replace("-", "").upper()
+    
+    # Verify MAC address
+    if not re.match("^([0-9A-Fa-f]{12})$", mac_address):
+        print("[!] Invalid MAC address\n")
+        usage()
 
-# Compare entered MAC address with addresses in text file
-for address in MAC_ADDRESS.split("\n"):
-    if address[0:6] == mac_address[0:6]:
-        print(address[7:].strip())
-        sys.exit(0)
-
-print("[!] MAC address not found")
+with open(MAC_ADDRESS_PATH, "r", encoding="utf8") as m:
+    # Compare entered MAC address with addresses in text file
+    MAC_ADDRESS = m.read()
+    for address in MAC_ADDRESS.split("\n"):
+        if address[0:6] == mac_address[0:6]:
+            print(address[7:].strip())
+            break
+    else:
+        print("[!] MAC address not found")
